@@ -1,0 +1,51 @@
+﻿@model PaginatedList<Pagination.Models.Student>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            name
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.StudentID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.StudentID">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@{
+    var peviousDiable = !Model.PreviousPage ? "disabled" : "";
+    var nextDiable = !Model.NextPage ? "disabled" : "";
+}
+
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex-1)"
+   class="btn btn-default @peviousDiable" >
+    Previous
+</a>
+
+<a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex+1)"
+   class="btn btn-default @nextDiable">
+    Next
+</a>

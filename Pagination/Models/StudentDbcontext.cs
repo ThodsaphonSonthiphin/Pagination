@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pagination.Models
 {
@@ -8,6 +10,14 @@ namespace Pagination.Models
         public DbSet<Student> Students { get; set; }
         public StudentDbcontext(DbContextOptions<StudentDbcontext> options):base(options)
         {
+            
+        }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
             
         }
     }

@@ -1,0 +1,3 @@
+﻿GET https://localhost:5001/angular/students/1/10
+Accept: application/json
+###

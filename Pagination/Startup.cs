@@ -26,13 +26,15 @@ namespace Pagination
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<StudentDbcontext>(option =>
-                option.UseSqlServer(Configuration.GetConnectionString("default")));
+                option.UseSqlServer(Configuration.GetConnectionString("default")).EnableSensitiveDataLogging());
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            InitializeDatabase(app);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,6 +58,28 @@ namespace Pagination
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+        
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+               var context = serviceScope.ServiceProvider.GetRequiredService<StudentDbcontext>();
+               context.Database.Migrate();
+                if (!context.Students.Any())
+                {
+                    List<Pagination.Models.Student> students = new List<Student>();
+
+                    for (int i = 0; i < 100; i++)
+                    {
+                        students.Add(new Student(){Name = $"liu {i}"});
+                    }
+
+                    context.Students.AddRange(students);
+
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }
